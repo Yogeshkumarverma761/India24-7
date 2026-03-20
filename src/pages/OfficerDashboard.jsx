@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Target, AlertTriangle, Clock, CheckCircle } from 'lucide-react';
+import { Target, AlertTriangle, Clock, CheckCircle, Star } from 'lucide-react';
 import { mockComplaints } from '../data/mockData';
 import StatusBadge from '../components/StatusBadge';
 

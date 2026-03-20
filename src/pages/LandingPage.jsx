@@ -1,4 +1,36 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+
+const CountUp = ({ end, duration = 2000 }) => {
+  const [count, setCount] = useState(0);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          let startTimestamp = null;
+          const step = (timestamp) => {
+            if (!startTimestamp) startTimestamp = timestamp;
+            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+            setCount(Math.floor(progress * end));
+            if (progress < 1) {
+              window.requestAnimationFrame(step);
+            } else {
+              setCount(end);
+            }
+          };
+          window.requestAnimationFrame(step);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [end, duration]);
+
+  return <span ref={ref}>{count.toLocaleString()}</span>;
+};
 import { Link } from 'react-router-dom';
 import { Shield, Smartphone, Zap, MapPin, Search } from 'lucide-react';
 import ComplaintCard from '../components/ComplaintCard';
@@ -20,8 +52,10 @@ const LandingPage = () => {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 animate-in fade-in duration-700">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div>
-            <h1 className="text-5xl md:text-6xl font-black text-navy leading-tight mb-6">
-              Report. Track. <span className="text-saffron">Resolve.</span>
+            <h1 className="text-5xl md:text-6xl font-black text-navy leading-tight mb-6 flex flex-col">
+              <span>Report.</span>
+              <span>Track.</span>
+              <span className="text-saffron">Resolve.</span>
             </h1>
             <p className="text-lg text-gray-600 mb-8 max-w-lg leading-relaxed">
               India's smartest civic complaint platform. File a complaint in 60 seconds using our AI-powered chat — in your language, from your phone.
@@ -89,19 +123,19 @@ const LandingPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 divide-x divide-gray-100">
             <div className="text-center px-4 hover:-translate-y-1 transition-transform">
-              <div className="text-3xl md:text-4xl font-extrabold text-saffron mb-2">14,283</div>
+              <div className="text-3xl md:text-4xl font-extrabold text-saffron mb-2"><CountUp end={14283} /></div>
               <div className="text-sm font-semibold text-gray-500 uppercase tracking-wide">Complaints Filed</div>
             </div>
             <div className="text-center px-4 hover:-translate-y-1 transition-transform">
-              <div className="text-3xl md:text-4xl font-extrabold text-india-green mb-2">10,941</div>
+              <div className="text-3xl md:text-4xl font-extrabold text-india-green mb-2"><CountUp end={10941} /></div>
               <div className="text-sm font-semibold text-gray-500 uppercase tracking-wide">Issues Resolved</div>
             </div>
             <div className="text-center px-4 hover:-translate-y-1 transition-transform">
-              <div className="text-3xl md:text-4xl font-extrabold text-navy mb-2">342</div>
+              <div className="text-3xl md:text-4xl font-extrabold text-navy mb-2"><CountUp end={342} /></div>
               <div className="text-sm font-semibold text-gray-500 uppercase tracking-wide">Active Wards</div>
             </div>
             <div className="text-center px-4 hover:-translate-y-1 transition-transform">
-              <div className="text-3xl md:text-4xl font-extrabold text-accent-gold mb-2">91%</div>
+              <div className="text-3xl md:text-4xl font-extrabold text-accent-gold mb-2"><CountUp end={91} />%</div>
               <div className="text-sm font-semibold text-gray-500 uppercase tracking-wide">Citizen Satisfaction</div>
             </div>
           </div>

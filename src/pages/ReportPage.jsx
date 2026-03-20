@@ -26,6 +26,7 @@ const ReportPage = () => {
   const [verificationStep, setVerificationStep] = useState(0);
   
   const messagesEndRef = useRef(null);
+  const fileInputRef = useRef(null);
   
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -68,7 +69,12 @@ const ReportPage = () => {
   };
 
   // Step 3 handler
-  const handlePhotoUpload = () => {
+  const handlePhotoClick = () => {
+    if (fileInputRef.current) fileInputRef.current.click();
+  };
+
+  const handlePhotoUpload = (e) => {
+    if (!e.target.files || e.target.files.length === 0) return;
     setUploadingImage(true);
     // Simulate upload delay
     setTimeout(() => {
@@ -288,7 +294,8 @@ const ReportPage = () => {
               )}
 
               {step === 3 && (
-                <div className="border-2 border-dashed border-gray-300 rounded-2xl p-8 text-center hover:bg-gray-50 transition-colors cursor-pointer group" onClick={handlePhotoUpload}>
+                <div className="border-2 border-dashed border-gray-300 rounded-2xl p-8 text-center hover:bg-gray-50 transition-colors cursor-pointer group" onClick={handlePhotoClick}>
+                  <input type="file" ref={fileInputRef} onChange={handlePhotoUpload} className="hidden" accept="image/*" />
                   {uploadingImage ? (
                     <div className="flex flex-col items-center">
                       <div className="w-10 h-10 border-4 border-saffron border-t-transparent rounded-full animate-spin mb-3"></div>

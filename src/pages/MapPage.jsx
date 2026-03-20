@@ -82,7 +82,7 @@ const MapPage = () => {
           center={[28.6139, 77.2090]} 
           zoom={12} 
           scrollWheelZoom={true} 
-          style={{ height: '100%', width: '100%' }}
+          style={{ height: '65vh', width: '100%' }}
         >
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
