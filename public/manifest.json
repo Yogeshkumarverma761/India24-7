@@ -1,0 +1,20 @@
+{
+  "short_name": "India247",
+  "name": "India247 Civic Complaint Platform",
+  "icons": [
+    {
+      "src": "vite.svg",
+      "type": "image/svg+xml",
+      "sizes": "192x192"
+    },
+    {
+      "src": "vite.svg",
+      "type": "image/svg+xml",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#E8541A",
+  "background_color": "#F5F5F0"
+}

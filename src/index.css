@@ -1,0 +1,106 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", "sans-serif";
+  
+  --color-saffron: #E8541A;
+  --color-india-green: #1A6B3A;
+  --color-navy: #0F3460;
+  --color-background: #F5F5F0;
+  --color-card: #FFFFFF;
+  --color-accent-gold: #E8B84B;
+  
+  --color-status-pending-bg: #FEE2D5;
+  --color-status-pending-text: #C0390F;
+  --color-status-in-progress-bg: #FFF3CD;
+  --color-status-in-progress-text: #856404;
+  --color-status-assigned-bg: #DBEAFE;
+  --color-status-assigned-text: #1E3A8A;
+  --color-status-inspection-bg: #F3E8FF;
+  --color-status-inspection-text: #6B21A8;
+  --color-status-resolved-bg: #D1FAE5;
+  --color-status-resolved-text: #065F46;
+
+  --shadow-card: 0 1px 4px rgba(0,0,0,0.08);
+}
+
+@layer base {
+  body {
+    background-color: var(--color-background);
+    color: #374151;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    color: var(--color-navy);
+    font-weight: 600;
+  }
+}
+
+@layer components {
+  .card {
+    background-color: var(--color-card);
+    border-radius: 1rem;
+    box-shadow: var(--shadow-card);
+    padding: 1.25rem;
+  }
+
+  .btn-primary {
+    background-color: var(--color-saffron);
+    color: white;
+    border-radius: 0.75rem;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    transition: background-color 0.2s;
+  }
+  .btn-primary:hover {
+    background-color: #d64b16;
+  }
+  
+  .btn-secondary {
+    background-color: var(--color-india-green);
+    color: white;
+    border-radius: 0.75rem;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    transition: background-color 0.2s;
+  }
+  .btn-secondary:hover {
+    background-color: #155b31;
+  }
+  
+  .btn-outline {
+    border: 1.5px solid var(--color-saffron);
+    color: var(--color-saffron);
+    background-color: transparent;
+    border-radius: 0.75rem;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    transition: background-color 0.2s;
+  }
+  .btn-outline:hover {
+    background-color: #fff5f2;
+  }
+
+  .status-pill {
+    border-radius: 9999px;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    display: inline-block;
+  }
+
+  .input-field {
+    border: 1.5px solid #E5E7EB;
+    border-radius: 0.75rem;
+    padding: 0.75rem 1rem;
+    transition: all 0.2s;
+    outline: none;
+  }
+  .input-field:focus {
+    border-color: var(--color-saffron);
+    box-shadow: 0 0 0 1px var(--color-saffron);
+  }
+}
