@@ -32,11 +32,13 @@ const CountUp = ({ end, duration = 2000 }) => {
   return <span ref={ref}>{count.toLocaleString()}</span>;
 };
 import { Link } from 'react-router-dom';
-import { Shield, Smartphone, Zap, MapPin, Search } from 'lucide-react';
+import { Shield, Smartphone, Zap, MapPin, Search, X, Send } from 'lucide-react';
 import ComplaintCard from '../components/ComplaintCard';
 import { mockComplaints } from '../data/mockData';
 
 const LandingPage = () => {
+  const [isChatOpen, setIsChatOpen] = useState(false);
+
   const categories = [
     { name: 'Roads & Potholes', icon: '🕳️', bg: 'bg-orange-50' },
     { name: 'Garbage & Sanitation', icon: '🗑️', bg: 'bg-green-50' },
@@ -80,15 +82,15 @@ const LandingPage = () => {
           <div className="relative mx-auto w-full max-w-[320px] aspect-[9/19] bg-white rounded-[3rem] shadow-2xl border-[8px] border-gray-900 overflow-hidden transform md:rotate-2 hover:rotate-0 transition-transform duration-500">
             {/* Notch */}
             <div className="absolute top-0 inset-x-0 h-6 bg-gray-900 w-32 mx-auto rounded-b-3xl z-20"></div>
-            
+
             <div className="bg-gray-50 h-full p-4 pt-10 flex flex-col gap-4 overflow-hidden relative">
-              
+
               <div className="flex justify-start">
                 <div className="bg-white border border-gray-100 p-3 rounded-2xl rounded-tl-sm shadow-sm max-w-[85%] text-xs font-medium text-navy">
                   Namaste! What civic issue are you facing today? 🙏
                 </div>
               </div>
-              
+
               <div className="flex justify-end">
                 <div className="bg-saffron text-white p-3 rounded-2xl rounded-tr-sm shadow-sm max-w-[85%] text-xs font-medium">
                   There's a big pothole near my house
@@ -109,7 +111,7 @@ const LandingPage = () => {
 
               <div className="flex justify-start">
                 <div className="bg-white border-2 border-green-100 p-3 rounded-2xl rounded-tl-sm shadow-sm max-w-[85%] text-xs font-medium text-india-green bg-green-50">
-                  ✅ AI verified! Complaint filed.<br/>Tracking ID: IND-2026-04821
+                  ✅ AI verified! Complaint filed.<br />Tracking ID: IND-2026-04821
                 </div>
               </div>
 
@@ -243,7 +245,7 @@ const LandingPage = () => {
                 <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-saffron cursor-pointer transition-colors">in</div>
               </div>
             </div>
-            
+
             <div>
               <h4 className="font-bold mb-4 text-gray-200">Company</h4>
               <ul className="space-y-2 text-sm text-gray-400">
@@ -270,6 +272,91 @@ const LandingPage = () => {
           </div>
         </div>
       </footer>
+
+      {/* Floating Chatbot Button & Window */}
+      <div className="fixed bottom-6 right-6 z-[1000] flex flex-col items-end">
+        {/* Chatbot Window */}
+        {isChatOpen && (
+          <div className="mb-4 w-80 sm:w-96 bg-white/70 backdrop-blur-2xl border border-white/50 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.2)] rounded-3xl overflow-hidden animate-in slide-in-from-bottom-5 fade-in duration-300 transform origin-bottom-right">
+            {/* Chatbot Header */}
+            <div className="bg-gradient-to-r from-saffron to-[#d64b16] p-4 text-white flex justify-between items-center shadow-md relative z-10">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center text-xl shadow-inner border border-white/30 backdrop-blur-sm">
+                  👩‍🦰
+                </div>
+                <div>
+                  <h3 className="font-bold text-sm leading-tight">Meera</h3>
+                  <p className="text-[10px] text-orange-100 font-medium tracking-wide uppercase">AI Assistant</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setIsChatOpen(false)}
+                className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/20 transition-colors"
+                aria-label="Close Chat"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            {/* Chatbot Body */}
+            <div className="p-5 h-80 overflow-y-auto bg-gray-50/40 flex flex-col gap-4">
+              <div className="flex justify-start">
+                <div className="bg-white/90 backdrop-blur-md border border-white shadow-sm p-4 rounded-2xl rounded-tl-sm text-sm text-navy font-medium max-w-[85%] animate-in fade-in slide-in-from-left-2 duration-300">
+                  Hii. I'm Meera.<br />What assistance do you need today? 😊
+                </div>
+              </div>
+            </div>
+
+            {/* Chatbot Input */}
+            <div className="p-4 bg-white/80 backdrop-blur-xl border-t border-white/50">
+              <div className="relative flex items-center">
+                <input
+                  type="text"
+                  placeholder="Type a message..."
+                  className="w-full bg-white/90 border border-gray-200/50 rounded-full pl-5 pr-12 py-3 text-sm focus:outline-none focus:border-saffron focus:ring-1 focus:ring-saffron transition-all shadow-inner"
+                />
+                <button className="absolute right-1.5 w-9 h-9 bg-saffron text-white rounded-full flex items-center justify-center hover:bg-[#d64b16] transition-colors shadow-sm">
+                  <Send size={16} className="ml-0.5" />
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Floating Button */}
+        <div className="group relative">
+          {!isChatOpen && (
+            <div className="absolute bottom-full right-0 mb-4 w-max opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+              <div className="bg-gray-900/90 backdrop-blur-md text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-xl border border-gray-700">
+                Chat with our AI assistant - Meera
+                <div className="absolute -bottom-1.5 right-6 w-3 h-3 bg-gray-900/90 rotate-45 border-r border-b border-gray-700"></div>
+              </div>
+            </div>
+          )}
+
+          <button
+            onClick={() => setIsChatOpen(!isChatOpen)}
+            className={`w-14 h-14 rounded-full flex items-center justify-center text-3xl shadow-[0_10px_25px_-5px_rgba(232,84,26,0.5)] hover:scale-110 transition-all duration-300 z-50 ${isChatOpen
+                ? 'bg-gray-100 text-gray-500 shadow-md rotate-90 scale-90 hover:scale-100'
+                : 'bg-gradient-to-tr from-saffron to-orange-400 text-white'
+              }`}
+            style={{
+              animation: !isChatOpen ? 'floating 3s ease-in-out infinite' : 'none'
+            }}
+          >
+            {isChatOpen ? <X size={24} /> : '🙏'}
+          </button>
+
+          <style dangerouslySetInnerHTML={{
+            __html: `
+            @keyframes floating {
+              0% { transform: translateY(0px); }
+              50% { transform: translateY(-8px); }
+              100% { transform: translateY(0px); }
+            }
+          `}} />
+        </div>
+      </div>
     </div>
   );
 };
