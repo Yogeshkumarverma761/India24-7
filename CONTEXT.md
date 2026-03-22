@@ -39,6 +39,12 @@ Building a modern, responsive, premium frontend for India247 — a civic complai
 ### Phase 5: Feature Additions
 - Added a floating glassmorphism AI Assistant widget (Meera) to the Landing Page with custom hover tooltips, animated floating states, and an initial greeting conversation element.
 
+### Phase 6: API Integration
+- Switched from Claude API to Gemini API (free tier)
+- Model: gemini-2.5-flash-lite-preview-06-17
+- Gemini API key in GEMINI_API_KEY constant
+- Full AI conversation flow, image verification, and complaint summary all working
+
 ---
 
 ## 🚀 Next Steps & Future Capabilities
