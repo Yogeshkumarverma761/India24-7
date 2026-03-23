@@ -25,7 +25,9 @@ def cleanup_otp(email: str):
 
 @router.post("/send-otp")
 async def send_otp(request: OTPRequest, background_tasks: BackgroundTasks):
-    otp = str(random.randint(100000, 999999))
+    # FOR DEMO: Set a fixed OTP 123456 so user can test without email
+    # In production, use: str(random.randint(100000, 999999))
+    otp = "123456" 
     expires = time.time() + 300 # 5 minutes
     
     otp_store[request.email] = {"otp": otp, "expires": expires}
@@ -33,10 +35,11 @@ async def send_otp(request: OTPRequest, background_tasks: BackgroundTasks):
     # Simulate sending email
     print(f"\n[SECURITY] OTP for {request.email}: {otp}\n")
     
-    # Optional: Schedule cleanup
-    # background_tasks.add_task(cleanup_otp, request.email)
-    
-    return {"status": "success", "message": "OTP sent successfully to your email"}
+    return {
+        "status": "success", 
+        "message": "OTP sent successfully. [DEMO MODE: Use 123456]",
+        "demo_otp": "123456" # Returning it in response for easy testing
+    }
 
 @router.post("/verify-otp")
 async def verify_otp(request: OTPVerify):
