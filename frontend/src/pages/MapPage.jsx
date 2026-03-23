@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import { mockComplaints } from '../data/mockData';
 import StatusBadge from '../components/StatusBadge';
-import { MapPin } from 'lucide-react';
+import { MapPin, Loader2 } from 'lucide-react';
 import L from 'leaflet';
+import { complaintService } from '../services/api';
 
 // Fix for default marker icons in react-leaflet
 delete L.Icon.Default.prototype._getIconUrl;
@@ -30,14 +30,36 @@ const getMarkerColor = (status) => {
 };
 
 const MapPage = () => {
+  const [complaints, setComplaints] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('All');
+
+  useEffect(() => {
+    const fetchComplaints = async () => {
+      try {
+        const data = await complaintService.getAll();
+        setComplaints(data);
+      } catch (error) {
+        console.error("Error fetching map data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchComplaints();
+  }, []);
   
   const filteredComplaints = filter === 'All' 
-    ? mockComplaints 
-    : mockComplaints.filter(c => c.status === filter);
-
-  const pendingCount = mockComplaints.filter(c => c.status === 'Pending').length;
+    ? complaints 
+    : complaints.filter(c => c.status === filter);
   
+  if (loading) {
+    return (
+      <div className="pt-16 min-h-screen bg-gray-50 flex items-center justify-center">
+        <Loader2 className="animate-spin text-saffron" size={48} />
+      </div>
+    );
+  }
+
   return (
     <div className="pt-16 min-h-screen bg-gray-50 flex flex-col">
       {/* Filters & Stats Bar */}

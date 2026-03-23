@@ -1,4 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
+import { Shield, Smartphone, Zap, MapPin, Search, X, Send, Loader2 } from 'lucide-react';
+import ComplaintCard from '../components/ComplaintCard';
+import { mockComplaints } from '../data/mockData';
+import { aiService } from '../services/api';
 
 const CountUp = ({ end, duration = 2000 }) => {
   const [count, setCount] = useState(0);
@@ -31,13 +36,54 @@ const CountUp = ({ end, duration = 2000 }) => {
 
   return <span ref={ref}>{count.toLocaleString()}</span>;
 };
-import { Link } from 'react-router-dom';
-import { Shield, Smartphone, Zap, MapPin, Search, X, Send } from 'lucide-react';
-import ComplaintCard from '../components/ComplaintCard';
-import { mockComplaints } from '../data/mockData';
 
 const LandingPage = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [messages, setMessages] = useState([
+    { role: 'model', content: "Hii. I'm Meera. What assistance do you need today? 😊" }
+  ]);
+  const [inputValue, setInputValue] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [chatHistory, setChatHistory] = useState([]);
+  const chatEndRef = useRef(null);
+
+  const scrollToBottom = () => {
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    if (isChatOpen) {
+      scrollToBottom();
+    }
+  }, [messages, isChatOpen]);
+
+  const handleSendMessage = async (e) => {
+    e?.preventDefault();
+    if (!inputValue.trim() || isLoading) return;
+
+    const userMessage = inputValue;
+    setMessages(prev => [...prev, { role: 'user', content: userMessage }]);
+    setInputValue('');
+    setIsLoading(true);
+
+    try {
+      // Map frontend history to Gemini format (simplification for this task)
+      // history: [{"role": "user", "parts": ["..."]}, {"role": "model", "parts": ["..."]}]
+      const formattedHistory = chatHistory;
+      
+      const res = await aiService.report(userMessage, formattedHistory);
+      
+      if (res.status === 'success') {
+        setMessages(prev => [...prev, { role: 'model', content: res.response }]);
+        setChatHistory(res.new_history);
+      }
+    } catch (error) {
+      console.error("Chat error:", error);
+      setMessages(prev => [...prev, { role: 'model', content: "Oops! Something went wrong. Can you try again? 😓" }]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const categories = [
     { name: 'Roads & Potholes', icon: '🕳️', bg: 'bg-orange-50' },
@@ -300,26 +346,48 @@ const LandingPage = () => {
 
             {/* Chatbot Body */}
             <div className="p-5 h-80 overflow-y-auto bg-gray-50/40 flex flex-col gap-4">
-              <div className="flex justify-start">
-                <div className="bg-white/90 backdrop-blur-md border border-white shadow-sm p-4 rounded-2xl rounded-tl-sm text-sm text-navy font-medium max-w-[85%] animate-in fade-in slide-in-from-left-2 duration-300">
-                  Hii. I'm Meera.<br />What assistance do you need today? 😊
+              {messages.map((msg, i) => (
+                <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                  <div className={`p-4 rounded-2xl shadow-sm text-sm font-medium max-w-[85%] animate-in fade-in slide-in-from-${msg.role === 'user' ? 'right' : 'left'}-2 duration-300 ${
+                    msg.role === 'user' 
+                      ? 'bg-saffron text-white rounded-tr-sm' 
+                      : 'bg-white/90 backdrop-blur-md border border-white text-navy rounded-tl-sm'
+                  }`}>
+                    {msg.content}
+                  </div>
                 </div>
-              </div>
+              ))}
+              {isLoading && (
+                <div className="flex justify-start">
+                  <div className="bg-white/90 backdrop-blur-md border border-white shadow-sm p-4 rounded-2xl rounded-tl-sm text-navy max-w-[85%] flex items-center gap-2">
+                    <Loader2 className="animate-spin" size={16} />
+                    <span className="text-xs font-semibold uppercase tracking-widest animate-pulse">Meera is thinking...</span>
+                  </div>
+                </div>
+              )}
+              <div ref={chatEndRef} />
             </div>
 
             {/* Chatbot Input */}
-            <div className="p-4 bg-white/80 backdrop-blur-xl border-t border-white/50">
+            <form onSubmit={handleSendMessage} className="p-4 bg-white/80 backdrop-blur-xl border-t border-white/50">
               <div className="relative flex items-center">
                 <input
                   type="text"
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
                   placeholder="Type a message..."
-                  className="w-full bg-white/90 border border-gray-200/50 rounded-full pl-5 pr-12 py-3 text-sm focus:outline-none focus:border-saffron focus:ring-1 focus:ring-saffron transition-all shadow-inner"
+                  disabled={isLoading}
+                  className="w-full bg-white/90 border border-gray-200/50 rounded-full pl-5 pr-12 py-3 text-sm focus:outline-none focus:border-saffron focus:ring-1 focus:ring-saffron transition-all shadow-inner disabled:opacity-50"
                 />
-                <button className="absolute right-1.5 w-9 h-9 bg-saffron text-white rounded-full flex items-center justify-center hover:bg-[#d64b16] transition-colors shadow-sm">
+                <button 
+                  type="submit"
+                  disabled={isLoading}
+                  className="absolute right-1.5 w-9 h-9 bg-saffron text-white rounded-full flex items-center justify-center hover:bg-[#d64b16] transition-colors shadow-sm disabled:bg-gray-400"
+                >
                   <Send size={16} className="ml-0.5" />
                 </button>
               </div>
-            </div>
+            </form>
           </div>
         )}
 

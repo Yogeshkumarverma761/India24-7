@@ -8,6 +8,7 @@ import FeedPage from './pages/FeedPage';
 import TrackerPage from './pages/TrackerPage';
 import RewardsPage from './pages/RewardsPage';
 import OfficerDashboard from './pages/OfficerDashboard';
+import VoiceAssistant from './components/VoiceAssistant';
 
 // Simple scroll to top on route change
 const ScrollToTop = () => {
@@ -67,6 +68,7 @@ function App() {
           </Routes>
         </main>
         <BottomNav />
+        <VoiceAssistant />
       </div>
     </Router>
   );

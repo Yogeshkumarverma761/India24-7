@@ -1,16 +1,75 @@
-# React + Vite
+# India247 🇮🇳
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+India247 is a next-generation civic platform that empowers Indian citizens to report, track, and resolve local issues (potholes, garbage, water leaks) using AI and community collaboration.
 
-Currently, two official plugins are available:
+## 🚀 Key Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+*   **Meera AI Assistant**: Report issues via a smart chat or voice commands.
+*   **AI Vision Verification**: Automated photo verification to ensure reporting accuracy.
+*   **Live Complaint Map**: Real-time visualization of civic issues in your ward.
+*   **OTP Security**: Secure citizen login via one-time passwords.
+*   **Leaderboard & Rewards**: Earn points and badges for civic engagement.
+*   **Officer Dashboard**: Task management for municipal offiers.
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🛠️ Project Structure
 
-## Expanding the ESLint configuration
+```bash
+India247/
+├── frontend/  # React (Vite) + Tailwind CSS
+└── backend/   # FastAPI + PostgreSQL (SQLModel) + Gemini AI
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## 💻 Local Development
+
+### 1. Backend Setup
+1. Navigate to the `/backend` folder.
+2. Create a `.env` file from the `.env.example`.
+3. Fill in your **Gemini AI Keys** and **Database URL**.
+4. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+5. Run the server:
+   ```bash
+   uvicorn main:app --reload
+   ```
+
+### 2. Frontend Setup
+1. Navigate to the `/frontend` folder.
+2. Create a `.env` file from the `.env.example`.
+3. Add your **Google Maps API Key**.
+4. Install dependencies:
+   ```bash
+   npm install
+   ```
+5. Run the dev server:
+   ```bash
+   npm run dev
+   ```
+
+---
+
+## 🚢 Deployment Guide
+
+### Backend (e.g., Render, Heroku)
+1. Set the root directory to `/backend`.
+2. Configure **Environment Variables** (see `backend/.env.example`).
+3. Set the build command to `pip install -r requirements.txt`.
+4. Set the start command to `uvicorn main:app --host 0.0.0.0 --port $PORT`.
+
+### Frontend (e.g., Vercel, Netlify)
+1. Set the root directory to `/frontend`.
+2. Configure **Environment Variables**:
+   - `VITE_API_URL`: The URL of your deployed backend API (including `/api`).
+   - `VITE_GOOGLE_MAPS_API_KEY`: Your Maps API key.
+3. Set the build command to `npm run build`.
+4. Set the output directory to `dist`.
+
+---
+
+## 🇮🇳 Jai Hind!
+Built for a better, cleaner, and smarter India.

@@ -1,8 +1,38 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import ComplaintCard from '../components/ComplaintCard';
-import { mockComplaints, citizens } from '../data/mockData';
+import { complaintService, userService } from '../services/api';
 
 const FeedPage = () => {
+  const [complaints, setComplaints] = useState([]);
+  const [leaderboard, setLeaderboard] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [complaintsData, leaderboardData] = await Promise.all([
+          complaintService.getAll(),
+          userService.getLeaderboard()
+        ]);
+        setComplaints(complaintsData);
+        setLeaderboard(leaderboardData);
+      } catch (error) {
+        console.error("Failed to fetch data from backend:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="pt-24 min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-saffron"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="pt-24 pb-12 min-h-screen bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -29,9 +59,15 @@ const FeedPage = () => {
             </div>
 
             <div className="space-y-6">
-              {mockComplaints.map(complaint => (
-                <ComplaintCard key={complaint.id} complaint={complaint} />
-              ))}
+              {complaints.length > 0 ? (
+                complaints.map(complaint => (
+                  <ComplaintCard key={complaint.id} complaint={complaint} />
+                ))
+              ) : (
+                <div className="text-center py-12 bg-white rounded-2xl border border-dashed border-gray-200">
+                  <p className="text-gray-500">No complaints found. Be the first to report!</p>
+                </div>
+              )}
             </div>
             
             <div className="mt-8 text-center">
@@ -50,7 +86,7 @@ const FeedPage = () => {
                 <span className="text-saffron">🔥</span> Trending Issues
               </h2>
               <div className="space-y-4">
-                {mockComplaints.sort((a,b) => b.upvotes - a.upvotes).slice(0, 3).map((issue, i) => (
+                {[...complaints].sort((a,b) => b.upvotes - a.upvotes).slice(0, 3).map((issue, i) => (
                   <div key={issue.id} className="flex gap-4 items-start group cursor-pointer hover:bg-gray-50 p-2 -mx-2 rounded-lg transition-colors">
                     <div className="text-2xl font-black text-gray-200 group-hover:text-saffron transition-colors">#{i+1}</div>
                     <div>
@@ -71,11 +107,11 @@ const FeedPage = () => {
               </h2>
               
               <div className="space-y-4 relative z-10">
-                {citizens.map((citizen, i) => (
+                {leaderboard.map((citizen, i) => (
                   <div key={i} className="flex items-center justify-between pb-3 border-b border-gray-700/50 last:border-0 last:pb-0">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center font-bold text-xs">
-                        {citizen.rank}
+                        {i + 1}
                       </div>
                       <span className="font-semibold text-sm">{citizen.name}</span>
                     </div>
