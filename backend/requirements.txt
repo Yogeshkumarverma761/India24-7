@@ -1,5 +1,6 @@
 fastapi
-uvicorn
+uvicorn[standard]
+gunicorn
 sqlmodel
 pydantic-settings
 python-dotenv
@@ -8,4 +9,3 @@ python-multipart
 psycopg2-binary
 passlib[bcrypt]
 python-jose[cryptography]
-python-multipart
