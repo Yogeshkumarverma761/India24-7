@@ -15,12 +15,12 @@ class EscalationEnum(str, Enum):
     L2 = "L2"
     L3 = "L3"
 
-class User(SQLModel, table=True):
+class Citizen(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     username: str = Field(unique=True, index=True)
     email: str = Field(unique=True)
     hashed_password: str
-    full_name: str
+    name: str
     avatar_url: Optional[str] = None
     points: int = Field(default=0)
     badge: str = Field(default="🥉")
@@ -43,8 +43,8 @@ class Complaint(SQLModel, table=True):
     escalation_level: EscalationEnum = Field(default=EscalationEnum.L1)
     image_url: Optional[str] = None
     
-    creator_id: Optional[int] = Field(default=None, foreign_key="user.id")
-    creator: Optional[User] = Relationship(back_populates="complaints")
+    creator_id: Optional[int] = Field(default=None, foreign_key="citizen.id")
+    creator: Optional[Citizen] = Relationship(back_populates="complaints")
     
     officer_id: Optional[str] = Field(default=None, foreign_key="officer.id")
     assigned_officer: Optional["Officer"] = Relationship(back_populates="complaints")
