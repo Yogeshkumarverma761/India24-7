@@ -28,7 +28,7 @@ India247/
 ### 1. Backend Setup
 1. Navigate to the `/backend` folder.
 2. Create a `.env` file from the `.env.example`.
-3. Fill in your **Gemini AI Keys** and **Database URL**.
+3. Fill in your **Gemini AI Keys** and **Database URL** (e.g. Neon PostgreSQL).
 4. Install dependencies:
    ```bash
    pip install -r requirements.txt
@@ -37,6 +37,9 @@ India247/
    ```bash
    uvicorn main:app --reload
    ```
+
+> [!TIP]
+> The project is pre-configured for **Neon PostgreSQL**. For production, ensure your connection string includes `sslmode=require`.
 
 ### 2. Frontend Setup
 1. Navigate to the `/frontend` folder.
