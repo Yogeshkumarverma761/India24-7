@@ -2,8 +2,15 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
 
 const handleResponse = async (response) => {
   if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.detail || 'Something went wrong');
+    let errorMessage = 'Something went wrong';
+    try {
+      const error = await response.json();
+      errorMessage = error.detail || errorMessage;
+    } catch (e) {
+      errorMessage = await response.text();
+    }
+    console.error(`[API Error] ${response.status}: ${errorMessage}`);
+    throw new Error(errorMessage);
   }
   return response.json();
 };
