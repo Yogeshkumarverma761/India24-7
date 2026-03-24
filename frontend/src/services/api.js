@@ -85,6 +85,14 @@ export const aiService = {
     });
     return handleResponse(response);
   },
+  summarize: async (category, description, location) => {
+    const response = await fetch(`${API_URL}/ai/summarize`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ category, description, location }),
+    });
+    return handleResponse(response);
+  },
 };
 
 export const authService = {

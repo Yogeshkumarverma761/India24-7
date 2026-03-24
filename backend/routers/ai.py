@@ -36,7 +36,7 @@ class ChatRequest(BaseModel):
 async def ai_report(request: ChatRequest, session: Session = Depends(get_session)):
     try:
         # Use Report Key
-        genai.configure(api_key=settings.GEMINI_REPORT_KEY)
+        genai.configure(api_key=settings.GEMINI_API_KEY)
         
         current_model = genai.GenerativeModel(
             model_name='gemini-1.5-flash-latest',
@@ -62,7 +62,7 @@ async def ai_report(request: ChatRequest, session: Session = Depends(get_session
 async def ai_voice(request: ChatRequest, session: Session = Depends(get_session)):
     try:
         # Use Voice Key
-        genai.configure(api_key=settings.GEMINI_VOICE_KEY)
+        genai.configure(api_key=settings.GEMINI_API_KEY)
         
         current_model = genai.GenerativeModel(
             model_name='gemini-1.5-flash-latest',
@@ -86,7 +86,7 @@ async def analyze_photo(
         img_data = await file.read()
         
         # Use Report Key
-        genai.configure(api_key=settings.GEMINI_REPORT_KEY)
+        genai.configure(api_key=settings.GEMINI_API_KEY)
         model = genai.GenerativeModel('gemini-1.5-flash-latest')
 
         prompt = f"""
@@ -111,9 +111,41 @@ async def analyze_photo(
         
         contents = [{"mime_type": file.content_type, "data": img_data}, prompt]
         response = model.generate_content(contents)
-        res_text = response.text.strip().replace("```json", "").replace("```", "")
-        analysis = json.loads(res_text)
+        
+        # Robust JSON extraction
+        raw_text = response.text.strip()
+        if "{" in raw_text:
+            json_str = raw_text[raw_text.find("{"):raw_text.rfind("}")+1]
+            analysis = json.loads(json_str)
+        else:
+            raise ValueError("AI did not return a valid JSON object")
         
         return {"status": "success", "analysis": analysis}
+    except Exception as e:
+        print(f"Vision Error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"AI Vision Error: {str(e)}")
+
+class SummaryRequest(BaseModel):
+    category: str
+    description: str
+    location: str
+
+@router.post("/summarize")
+async def ai_summarize(request: SummaryRequest):
+    try:
+        genai.configure(api_key=settings.GEMINI_API_KEY)
+        model = genai.GenerativeModel('gemini-1.5-flash-latest')
+        
+        prompt = f"""
+        Generate a formal 2-sentence complaint summary for an Indian civic body.
+        Issue: {request.category}
+        Details: {request.description}
+        Location: {request.location}
+        
+        Use professional yet empathetic language.
+        """
+        
+        response = model.generate_content(prompt)
+        return {"status": "success", "summary": response.text.strip()}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

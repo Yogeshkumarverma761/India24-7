@@ -326,10 +326,8 @@ const ReportPage = () => {
     setIsTyping(true);
 
     try {
-      const summary = await callGemini({
-        system: "Generate a formal 2-sentence complaint summary for a municipality.",
-        messages: [{ isBot: false, text: `Issue: ${formData.category}. Desc: ${formData.description}. Loc: ${formData.location}` }]
-      });
+      const res = await aiService.summarize(formData.category, formData.description, formData.location);
+      const summary = res.summary || "Complaint filed.";
       setComplaintSummary(summary);
       
       // SAVE TO DATABASE
