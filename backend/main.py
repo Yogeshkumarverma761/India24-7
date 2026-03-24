@@ -8,9 +8,16 @@ settings = get_settings()
 app = FastAPI(title=settings.APP_NAME)
 
 # CORS Configuration - Update allow_origins in production
+origins = [
+    "https://india24-7.vercel.app",
+    "https://india247.vercel.app",
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # In production, change to: ["https://india247.vercel.app"]
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

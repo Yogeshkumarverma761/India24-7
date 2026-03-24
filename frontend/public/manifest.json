@@ -3,12 +3,12 @@
   "name": "India247 Civic Complaint Platform",
   "icons": [
     {
-      "src": "vite.svg",
+      "src": "favicon.svg",
       "type": "image/svg+xml",
       "sizes": "192x192"
     },
     {
-      "src": "vite.svg",
+      "src": "favicon.svg",
       "type": "image/svg+xml",
       "sizes": "512x512"
     }

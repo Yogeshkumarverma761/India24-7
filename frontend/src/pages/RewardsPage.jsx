@@ -4,7 +4,25 @@ import { rewards, citizens } from '../data/mockData';
 
 const RewardsPage = () => {
   const [tab, setTab] = useState('rewards');
-  const userPoints = 1240;
+  const [userData, setUserData] = useState({
+    name: 'Citizen Guest',
+    points: 0,
+    badge: 'New Reporter'
+  });
+
+  React.useEffect(() => {
+    const savedUser = localStorage.getItem('india247_user');
+    if (savedUser) {
+      const user = JSON.parse(savedUser);
+      setUserData({
+        name: user.name || 'Citizen User',
+        points: user.points || 1240, // fallback to typical points for demo if not in user object
+        badge: user.badge || 'Silver Reporter Badge'
+      });
+    }
+  }, []);
+
+  const userPoints = userData.points;
 
   return (
     <div className="min-h-screen bg-gray-50 pt-20 pb-12">
@@ -18,14 +36,14 @@ const RewardsPage = () => {
           <div className="flex items-center gap-6">
             <div className="w-24 h-24 bg-white/10 rounded-full border-4 border-white/20 flex items-center justify-center p-1">
               <div className="w-full h-full bg-saffron rounded-full flex items-center justify-center text-3xl font-bold">
-                RS
+                {userData.name.split(' ').map(n => n[0]).join('')}
               </div>
             </div>
             <div>
-              <h1 className="text-3xl font-bold mb-1">Rahul Sharma</h1>
+              <h1 className="text-3xl font-bold mb-1">{userData.name}</h1>
               <p className="text-gray-300 flex items-center gap-2">
                 <Trophy size={16} className="text-accent-gold" />
-                Silver Reporter Badge
+                {userData.badge}
               </p>
             </div>
           </div>
@@ -39,11 +57,11 @@ const RewardsPage = () => {
             
             <div className="mt-4 text-left">
               <div className="flex justify-between text-xs text-gray-300 font-medium mb-1">
-                <span>Progress to Gold</span>
-                <span>1240 / 2000 pts</span>
+                <span>Progress to {userPoints >= 2000 ? 'Platinum' : 'Gold'}</span>
+                <span>{userPoints} / {userPoints >= 2000 ? '5000' : '2000'} pts</span>
               </div>
               <div className="h-2 w-full bg-white/20 rounded-full overflow-hidden">
-                <div className="h-full bg-accent-gold rounded-full" style={{ width: '62%' }}></div>
+                <div className="h-full bg-accent-gold rounded-full" style={{ width: `${Math.min((userPoints / (userPoints >= 2000 ? 5000 : 2000)) * 100, 100)}%` }}></div>
               </div>
             </div>
           </div>

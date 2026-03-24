@@ -1,4 +1,4 @@
-from sqlmodel import Session
+from sqlmodel import Session, select
 from .database import engine, create_db_and_tables
 from .models import Complaint, Officer, Citizen, Reward, StatusEnum, EscalationEnum
 from datetime import datetime
@@ -57,6 +57,5 @@ def seed_db():
         session.commit()
     print("Seeding complete. The backend is now data-rich.")
 
-from sqlmodel import select
 if __name__ == "__main__":
     seed_db()
