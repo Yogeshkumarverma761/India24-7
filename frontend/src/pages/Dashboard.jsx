@@ -247,10 +247,12 @@ export default function Dashboard() {
       
       // Try backend
       try {
-        await complaintService.create(newComplaint);
-      } catch {}
+        const created = await complaintService.create(newComplaint);
+        setComplaints(prev => [created, ...prev]);
+      } catch (e) {
+        setComplaints(prev => [newComplaint, ...prev]);
+      }
       
-      setComplaints(prev => [newComplaint, ...prev]);
       setReportModalOpen(false);
       setActiveTab('My Reports');
       toast('success', 'Report Submitted!', 'Your report is now live. You\'ll be notified as it progresses.');

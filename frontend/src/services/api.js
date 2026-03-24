@@ -18,19 +18,38 @@ const handleResponse = async (response) => {
 export const complaintService = {
   getAll: async () => {
     const response = await fetch(`${API_URL}/complaints/`);
-    return handleResponse(response);
+    const data = await handleResponse(response);
+    // map flat API data to nested format expected by UI
+    return (Array.isArray(data) ? data : data.complaints || []).map(c => ({
+      ...c,
+      user: { name: c.user_name || 'Citizen', avatar: c.user_avatar || 'U' }
+    }));
   },
   getById: async (id) => {
     const response = await fetch(`${API_URL}/complaints/${id}`);
-    return handleResponse(response);
+    const c = await handleResponse(response);
+    return { ...c, user: { name: c.user_name || 'Citizen', avatar: c.user_avatar || 'U' } };
   },
   create: async (complaintData) => {
+    // Map UI data to backend API format
+    const payload = {
+      category: complaintData.category || complaintData.issueType || 'Other',
+      title: complaintData.title || '',
+      description: complaintData.description || '',
+      location: complaintData.location || '',
+      lat: complaintData.lat || 0,
+      lng: complaintData.lng || 0,
+      user_name: complaintData.user?.name || complaintData.user_name || 'Citizen',
+      user_avatar: complaintData.user?.avatar || complaintData.user_avatar || 'U'
+    };
+    
     const response = await fetch(`${API_URL}/complaints/`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(complaintData),
+      body: JSON.stringify(payload),
     });
-    return handleResponse(response);
+    const c = await handleResponse(response);
+    return { ...c, user: { name: c.user_name || 'Citizen', avatar: c.user_avatar || 'U' } };
   },
   upvote: async (id) => {
     const response = await fetch(`${API_URL}/complaints/${id}/upvote`, {
