@@ -3,7 +3,7 @@ from functools import lru_cache
 
 class Settings(BaseSettings):
     APP_NAME: str = "India247 API"
-    GEMINI_API_KEY: str
+    GEMINI_API_KEY: Optional[str] = None
     GOOGLE_MAPS_API_KEY: str
     DATABASE_URL: str
     SECRET_KEY: str = "your-very-secret-key-change-it"

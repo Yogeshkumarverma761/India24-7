@@ -1,5 +1,5 @@
 import os
-import google.generativeai as genai
+from google import genai
 from typing import Optional
 from fastapi import APIRouter, HTTPException, Depends, UploadFile, File, Form
 from pydantic import BaseModel
@@ -12,6 +12,11 @@ import json
 
 settings = get_settings()
 router = APIRouter(prefix="/ai", tags=["ai"])
+
+def get_client():
+    if not settings.GEMINI_API_KEY:
+        raise HTTPException(status_code=500, detail="GEMINI_API_KEY is not configured in environment variables.")
+    return genai.Client(api_key=settings.GEMINI_API_KEY)
 
 # ─── Common System Instruction ───────────────────────────────────────────────
 SYSTEM_INSTRUCTION = """
@@ -33,17 +38,23 @@ class ChatRequest(BaseModel):
     system_prompt: Optional[str] = None
 
 @router.post("/report")
-async def ai_report(request: ChatRequest, session: Session = Depends(get_session)):
+async def ai_report(request: ChatRequest):
     try:
-        # Use Report Key
-        genai.configure(api_key=settings.GEMINI_API_KEY)
+        client = get_client()
         
-        current_model = genai.GenerativeModel(
-            model_name='gemini-1.5-flash-latest',
-            system_instruction=request.system_prompt or SYSTEM_INSTRUCTION
+        # Mapping history roles to gemini format
+        formatted_history = []
+        for h in request.history:
+             role = h.get("role", "user")
+             parts = h.get("parts", [])
+             formatted_history.append({"role": role, "parts": parts})
+
+        chat = client.chats.create(
+            model='gemini-1.5-flash',
+            config={"system_instruction": request.system_prompt or SYSTEM_INSTRUCTION},
+            history=formatted_history
         )
-            
-        chat = current_model.start_chat(history=request.history)
+        
         response = chat.send_message(request.message)
         
         return {
@@ -51,27 +62,24 @@ async def ai_report(request: ChatRequest, session: Session = Depends(get_session
             "response": response.text,
             "new_history": [
                 *request.history, 
-                {"role": "user", "parts": [request.message]}, 
-                {"role": "model", "parts": [response.text]}
+                {"role": "user", "parts": [{"text": request.message}]}, 
+                {"role": "model", "parts": [{"text": response.text}]}
             ]
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.post("/voice")
-async def ai_voice(request: ChatRequest, session: Session = Depends(get_session)):
+async def ai_voice(request: ChatRequest):
     try:
-        # Use Voice Key
-        genai.configure(api_key=settings.GEMINI_API_KEY)
+        client = get_client()
         
-        current_model = genai.GenerativeModel(
-            model_name='gemini-1.5-flash-latest',
-            system_instruction=request.system_prompt or "You are Meera, the personal voice assistant for India247. Keep it brief."
+        chat = client.chats.create(
+            model='gemini-1.5-flash',
+            config={"system_instruction": request.system_prompt or "You are Meera, the personal voice assistant for India247. Keep it brief."}
         )
-            
-        chat = current_model.start_chat(history=request.history)
-        response = chat.send_message(request.message)
         
+        response = chat.send_message(request.message)
         return {"status": "success", "response": response.text}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -79,16 +87,12 @@ async def ai_voice(request: ChatRequest, session: Session = Depends(get_session)
 @router.post("/analyze-photo")
 async def analyze_photo(
     file: UploadFile = File(...), 
-    category: Optional[str] = Form(None),
-    session: Session = Depends(get_session)
+    category: Optional[str] = Form(None)
 ):
     try:
         img_data = await file.read()
+        client = get_client()
         
-        # Use Report Key
-        genai.configure(api_key=settings.GEMINI_API_KEY)
-        model = genai.GenerativeModel('gemini-1.5-flash-latest')
-
         prompt = f"""
         You are an image verification AI for India247.
         The user claims this is a photo of a civic issue categorized as: "{category or 'General Civic Issue'}".
@@ -109,8 +113,17 @@ async def analyze_photo(
         }}
         """
         
-        contents = [{"mime_type": file.content_type, "data": img_data}, prompt]
-        response = model.generate_content(contents)
+        # In new SDK, we use types.Part for multi-modal
+        from google.genai import types
+        contents = [
+            types.Part.from_bytes(data=img_data, mime_type=file.content_type),
+            prompt
+        ]
+        
+        response = client.models.generate_content(
+            model='gemini-1.5-flash',
+            contents=contents
+        )
         
         # Robust JSON extraction
         raw_text = response.text.strip()
@@ -133,8 +146,7 @@ class SummaryRequest(BaseModel):
 @router.post("/summarize")
 async def ai_summarize(request: SummaryRequest):
     try:
-        genai.configure(api_key=settings.GEMINI_API_KEY)
-        model = genai.GenerativeModel('gemini-1.5-flash-latest')
+        client = get_client()
         
         prompt = f"""
         Generate a formal 2-sentence complaint summary for an Indian civic body.
@@ -145,7 +157,7 @@ async def ai_summarize(request: SummaryRequest):
         Use professional yet empathetic language.
         """
         
-        response = model.generate_content(prompt)
+        response = client.models.generate_content(model='gemini-1.5-flash', contents=prompt)
         return {"status": "success", "summary": response.text.strip()}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
