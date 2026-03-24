@@ -1,21 +1,22 @@
 import React from 'react';
 
 const STYLES = {
-  'SUBMITTED':    'bg-[#EFF6FF] text-[#3B82F6]',
-  'Pending':      'bg-[#EFF6FF] text-[#3B82F6]',
-  'IN PROGRESS':  'bg-[#FFF7ED] text-[#F4A261]',
-  'In Progress':  'bg-[#FFF7ED] text-[#F4A261]',
-  'Assigned':     'bg-[#FFF7ED] text-[#F4A261]',
-  'Under Inspection': 'bg-[#FFF7ED] text-[#F4A261]',
-  'RESOLVED':     'bg-[#F0FDF4] text-[#22A06B]',
-  'Resolved':     'bg-[#F0FDF4] text-[#22A06B]',
+  'SUBMITTED':    'bg-[hsl(220_60%_25%)]/10 text-[hsl(220_60%_25%)] border-[hsl(220_60%_25%)]/20',
+  'Pending':      'bg-[hsl(220_60%_25%)]/10 text-[hsl(220_60%_25%)] border-[hsl(220_60%_25%)]/20',
+  'IN PROGRESS':  'bg-[hsl(24_90%_52%)]/10 text-[hsl(24_90%_52%)] border-[hsl(24_90%_52%)]/20',
+  'In Progress':  'bg-[hsl(24_90%_52%)]/10 text-[hsl(24_90%_52%)] border-[hsl(24_90%_52%)]/20',
+  'Assigned':     'bg-[hsl(24_90%_52%)]/10 text-[hsl(24_90%_52%)] border-[hsl(24_90%_52%)]/20',
+  'Under Inspection': 'bg-[hsl(24_90%_52%)]/10 text-[hsl(24_90%_52%)] border-[hsl(24_90%_52%)]/20',
+  'RESOLVED':     'bg-[hsl(160_60%_40%)]/10 text-[hsl(160_60%_40%)] border-[hsl(160_60%_40%)]/20',
+  'Resolved':     'bg-[hsl(160_60%_40%)]/10 text-[hsl(160_60%_40%)] border-[hsl(160_60%_40%)]/20',
 };
 
 export default function StatusBadge({ status }) {
-  const cls = STYLES[status] || 'bg-gray-100 text-gray-500';
+  const cls = STYLES[status] || 'bg-[hsl(210_15%_95%)] text-[hsl(220_10%_45%)] border-[hsl(220_13%_90%)]';
   const label = status === 'Pending' ? 'SUBMITTED' : status === 'In Progress' || status === 'Assigned' || status === 'Under Inspection' ? 'IN PROGRESS' : status === 'Resolved' ? 'RESOLVED' : status?.toUpperCase();
+  
   return (
-    <span className={`font-sora text-[10px] uppercase font-[800] tracking-wider px-3 py-1 rounded-md ${cls}`}>
+    <span className={`font-inter text-[10px] uppercase font-semibold tracking-wider px-2.5 py-0.5 rounded-full border ${cls}`}>
       {label}
     </span>
   );

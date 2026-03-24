@@ -30,55 +30,57 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-teal-dark flex items-center justify-center p-4 font-sora">
-      <div className="bg-white rounded-[24px] p-8 shadow-2xl w-full max-w-md modal-slide-up">
+    <div className="min-h-screen bg-[hsl(210_20%_98%)] flex items-center justify-center p-4 font-inter">
+      <div className="bg-white rounded-xl border border-[hsl(220_13%_90%)] shadow-sm w-full max-w-[400px] p-8 modal-slide-up">
         {/* Brand */}
-        <div className="text-center mb-8">
-          <p className="text-warm-orange text-[14px] font-[800] tracking-widest leading-none mb-2">भारत 24/7</p>
-          <h1 className="text-[36px] font-[800] text-teal-dark tracking-[-0.5px] leading-none mb-2">India247</h1>
-          <p className="text-slate text-[13px] font-[600]">Bridge to the People · India</p>
+        <div className="text-center mb-6">
+          <div className="mx-auto w-12 h-12 bg-[hsl(220_60%_25%)] rounded-xl flex items-center justify-center mb-4 shadow-sm">
+            <span className="text-[hsl(24_90%_52%)] font-bold text-xl leading-none">247</span>
+          </div>
+          <h1 className="text-2xl font-semibold text-[hsl(220_30%_10%)] tracking-tight mb-1">{mode === 'login' ? 'Welcome back' : 'Create an account'}</h1>
+          <p className="text-[14px] text-[hsl(220_10%_45%)]">{mode === 'login' ? 'Enter your credentials to access your account' : 'Enter your details to get started'}</p>
         </div>
 
         {/* Toggle */}
-        <div className="flex bg-page-bg rounded-[12px] p-1 mb-6">
+        <div className="flex bg-[hsl(210_15%_95%)] rounded-lg p-1 mb-6">
           <button onClick={() => { setMode('login'); setError(''); }}
-            className={`flex-1 py-2.5 rounded-[10px] text-[14px] font-[800] transition-all ${mode === 'login' ? 'bg-teal-dark text-white shadow-md' : 'text-slate hover:text-charcoal'}`}>
+            className={`flex-1 py-1.5 rounded-md text-[13px] font-medium transition-all ${mode === 'login' ? 'bg-white text-[hsl(220_30%_10%)] shadow-sm' : 'text-[hsl(220_10%_45%)] hover:text-[hsl(220_30%_10%)]'}`}>
             Sign In
           </button>
           <button onClick={() => { setMode('signup'); setError(''); }}
-            className={`flex-1 py-2.5 rounded-[10px] text-[14px] font-[800] transition-all ${mode === 'signup' ? 'bg-teal-dark text-white shadow-md' : 'text-slate hover:text-charcoal'}`}>
+            className={`flex-1 py-1.5 rounded-md text-[13px] font-medium transition-all ${mode === 'signup' ? 'bg-white text-[hsl(220_30%_10%)] shadow-sm' : 'text-[hsl(220_10%_45%)] hover:text-[hsl(220_30%_10%)]'}`}>
             Sign Up
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {mode === 'signup' && (
-            <div>
-              <label className="text-[11px] font-[800] text-charcoal tracking-widest uppercase mb-2 block">Full Name</label>
-              <input type="text" value={name} onChange={e => setName(e.target.value)} placeholder="Enter your name"
+            <div className="space-y-1.5">
+              <label className="text-[13px] font-medium text-[hsl(220_30%_10%)]">Full Name</label>
+              <input type="text" value={name} onChange={e => setName(e.target.value)} placeholder="John Doe"
                 className="input-field" />
             </div>
           )}
-          <div>
-            <label className="text-[11px] font-[800] text-charcoal tracking-widest uppercase mb-2 block">Email Address</label>
-            <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@example.com"
+          <div className="space-y-1.5">
+            <label className="text-[13px] font-medium text-[hsl(220_30%_10%)]">Email</label>
+            <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="m@example.com"
               className="input-field" required />
           </div>
-          <div>
-            <label className="text-[11px] font-[800] text-charcoal tracking-widest uppercase mb-2 block">Password</label>
+          <div className="space-y-1.5">
+            <label className="text-[13px] font-medium text-[hsl(220_30%_10%)]">Password</label>
             <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••"
               className="input-field" />
           </div>
 
           {error && (
-            <div className="bg-[#FEF2F2] border border-[#FECACA] text-red text-[13px] font-[600] px-4 py-3 rounded-[12px]">{error}</div>
+            <div className="text-[hsl(0_84%_60%)] text-[13px] font-medium mt-2">{error}</div>
           )}
 
           <button type="submit" disabled={loading}
-            className={`w-full h-[52px] rounded-[12px] text-[15px] font-[800] shadow-md transition-all flex items-center justify-center gap-2 ${
-              loading ? 'bg-warm-orange/60 text-white cursor-not-allowed' : 'bg-warm-orange hover:bg-warm-orange-hover text-white hover:shadow-lg'
+            className={`w-full mt-2 h-[40px] rounded-md text-[14px] font-medium transition-colors flex items-center justify-center gap-2 ${
+              loading ? 'bg-[hsl(220_60%_25%)]/70 text-white cursor-not-allowed' : 'bg-[hsl(220_60%_25%)] hover:bg-[hsl(220_60%_20%)] text-white'
             }`}>
-            {loading ? 'Signing in...' : mode === 'login' ? 'Sign In' : 'Create Account'}
+            {loading ? 'Please wait...' : mode === 'login' ? 'Sign In' : 'Create Account'}
           </button>
         </form>
 
@@ -87,8 +89,8 @@ export default function LoginPage() {
             const guest = { name: 'Guest User', email: 'guest@india247.in' };
             localStorage.setItem('india247_user', JSON.stringify(guest));
             navigate('/');
-          }} className="text-teal-mid hover:text-teal-dark text-[13px] font-[700] transition-colors">
-            Continue as Guest →
+          }} className="text-[14px] text-[hsl(220_10%_45%)] hover:text-[hsl(220_30%_10%)] transition-colors underline underline-offset-4">
+            Continue as Guest
           </button>
         </div>
       </div>

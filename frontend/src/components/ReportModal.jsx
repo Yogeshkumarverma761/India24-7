@@ -34,11 +34,11 @@ export default function ReportModal({ open, onClose, onSubmit, locationName, sub
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 z-[100] flex items-end md:items-center justify-center md:p-4" onClick={onClose}>
-      <div className="bg-white rounded-t-[24px] md:rounded-[16px] shadow-2xl w-full md:max-w-[500px] p-6 md:p-8 modal-slide-up no-scrollbar overflow-y-auto max-h-[92vh] md:max-h-[90vh]" onClick={e => e.stopPropagation()}>
+    <div className="fixed inset-0 bg-black/50 z-[100] flex items-end md:items-center justify-center md:p-4 font-inter" onClick={onClose}>
+      <div className="bg-white rounded-t-xl md:rounded-xl shadow-lg w-full md:max-w-[500px] p-6 md:p-8 modal-slide-up no-scrollbar overflow-y-auto max-h-[92vh] md:max-h-[90vh] border border-[hsl(220_13%_90%)]" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-6">
-          <h3 className="font-sora text-[22px] font-[800] text-charcoal tracking-[-0.5px]">File a New Report</h3>
-          <button onClick={onClose} className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-500 hover:bg-gray-200 transition-colors">
+          <h3 className="text-[20px] font-semibold text-[hsl(220_30%_10%)] tracking-tight">File a New Report</h3>
+          <button onClick={onClose} className="w-8 h-8 flex items-center justify-center rounded-full bg-[hsl(210_15%_95%)] text-[hsl(220_10%_45%)] hover:bg-[hsl(220_13%_90%)] transition-colors">
             <X className="w-4 h-4" />
           </button>
         </div>
@@ -46,18 +46,18 @@ export default function ReportModal({ open, onClose, onSubmit, locationName, sub
         <div className="space-y-6">
           {/* Issue Type */}
           <div>
-            <label className="font-sora text-[11px] font-[800] text-charcoal tracking-widest uppercase mb-3 block">Issue Type</label>
+            <label className="text-[12px] font-semibold text-[hsl(220_30%_10%)] mb-3 block">ISSUE TYPE</label>
             <div className="grid grid-cols-2 gap-3">
               {ISSUE_TYPES.map(t => (
                 <button key={t.id} onClick={() => setIssueType(t.id)}
-                  className={`font-sora flex flex-col items-center justify-center p-4 rounded-[12px] border transition-all ${
+                  className={`flex flex-col items-center justify-center p-4 rounded-xl border transition-all ${
                     t.id === 'Other' ? 'col-span-2' : ''
                   } ${issueType === t.id
-                    ? 'border-teal-mid bg-teal-light shadow-[0_0_0_1px_rgba(31,122,122,0.1)]'
-                    : 'border-gray-200 hover:border-gray-300 bg-white'
+                    ? 'border-[hsl(220_60%_25%)] bg-[hsl(210_15%_95%)] bg-opacity-30 shadow-sm'
+                    : 'border-[hsl(220_13%_90%)] hover:border-[hsl(220_10%_45%)] bg-white'
                   }`}>
                   <img src={t.icon} alt={t.label} className="w-8 h-8 object-contain mb-2 drop-shadow-sm" />
-                  <span className="text-[13px] font-[700] text-charcoal leading-none">{t.label}</span>
+                  <span className="text-[13px] font-medium text-[hsl(220_30%_10%)] leading-none">{t.label}</span>
                 </button>
               ))}
             </div>
@@ -65,55 +65,55 @@ export default function ReportModal({ open, onClose, onSubmit, locationName, sub
 
           {/* Title */}
           <div>
-            <label className="font-sora text-[11px] font-[800] text-charcoal tracking-widest uppercase mb-2 block">Report Title</label>
+            <label className="text-[12px] font-semibold text-[hsl(220_30%_10%)] mb-2 block">REPORT TITLE</label>
             <input type="text" value={title} onChange={e => setTitle(e.target.value)}
               placeholder="e.g., Broken Streetlight on Main Road" className="input-field" />
           </div>
 
           {/* Description */}
           <div>
-            <label className="font-sora text-[11px] font-[800] text-charcoal tracking-widest uppercase mb-2 block">Description</label>
+            <label className="text-[12px] font-semibold text-[hsl(220_30%_10%)] mb-2 block">DESCRIPTION</label>
             <textarea value={description} onChange={e => setDescription(e.target.value)}
               placeholder="Describe the issue in detail..."
-              className="font-sora w-full h-[120px] p-4 rounded-[12px] bg-[#F8FAFC] border border-gray-200 text-charcoal text-[14px] placeholder:text-gray-400 outline-none focus:border-teal-mid focus:bg-white transition-all resize-none" />
+              className="w-full h-[120px] p-3 rounded-xl bg-transparent border border-[hsl(220_13%_90%)] text-[hsl(220_30%_10%)] text-[14px] placeholder:text-[hsl(220_10%_45%)] outline-none focus:border-[hsl(220_60%_25%)] focus:ring-1 focus:ring-[hsl(220_60%_25%)] transition-all resize-none" />
           </div>
 
           {/* Photo */}
           <div>
-            <label className="font-sora text-[11px] font-[800] text-charcoal tracking-widest uppercase mb-2 block">Photo Evidence</label>
+            <label className="text-[12px] font-semibold text-[hsl(220_30%_10%)] mb-2 block">PHOTO EVIDENCE</label>
             <input type="file" accept="image/*" id="photo-upload" className="hidden" onChange={handlePhoto} />
             {photoPreview ? (
-              <div className="relative w-full h-[140px] rounded-[16px] overflow-hidden border border-gray-200 group">
+              <div className="relative w-full h-[140px] rounded-xl overflow-hidden border border-[hsl(220_13%_90%)] group">
                 <img src={photoPreview} alt="Preview" className="w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                   <button onClick={() => { setPhotoPreview(null); setPhotoFile(null); document.getElementById('photo-upload').value = ''; }}
-                    className="font-sora bg-white text-red px-4 py-2 rounded-full text-[13px] font-[800] shadow-md flex items-center gap-2">
+                    className="bg-white text-[hsl(0_84%_60%)] px-4 py-2 rounded-full text-[13px] font-semibold shadow-sm flex items-center gap-2">
                     <X className="w-4 h-4" /> Remove Photo
                   </button>
                 </div>
               </div>
             ) : (
               <button onClick={() => document.getElementById('photo-upload').click()}
-                className="w-full h-[110px] rounded-[16px] border-[2px] border-dashed border-teal-mid/40 bg-teal-light flex flex-col items-center justify-center hover:bg-[#d1e6e2] hover:border-teal-mid/60 transition-all group">
-                <Upload className="w-[28px] h-[28px] text-teal-mid mb-2.5 group-hover:scale-110 transition-transform" />
-                <span className="font-sora text-[14px] font-[800] text-teal-mid mb-1">Click to upload photo</span>
-                <span className="font-sora text-[11px] text-slate font-[600]">Camera or gallery · Location auto-captured</span>
+                className="w-full h-[110px] rounded-xl border-2 border-dashed border-[hsl(220_13%_90%)] bg-[hsl(210_15%_95%)] bg-opacity-50 flex flex-col items-center justify-center hover:bg-[hsl(210_15%_95%)] hover:border-[hsl(220_10%_45%)] transition-all group">
+                <Upload className="w-[24px] h-[24px] text-[hsl(220_10%_45%)] mb-2.5 group-hover:scale-110 transition-transform" />
+                <span className="text-[14px] font-medium text-[hsl(220_30%_10%)] mb-1">Click to upload photo</span>
+                <span className="text-[11px] text-[hsl(220_10%_45%)]">Camera or gallery · Location auto-captured</span>
               </button>
             )}
           </div>
 
           {/* Location Tag */}
-          <div className="flex items-center gap-2 justify-center py-2 bg-gray-50 rounded-[12px] border border-gray-100">
-            <div className="w-2.5 h-2.5 rounded-full bg-green" />
-            <span className="font-sora text-[12px] font-[700] text-slate">
-              Location auto-tagged near <strong className="text-charcoal">{locationName?.split(',')[0] || 'Detecting...'}</strong>
+          <div className="flex items-center gap-2 justify-center py-2 bg-[hsl(210_15%_95%)] rounded-xl border border-[hsl(220_13%_90%)]">
+            <div className="w-2 h-2 rounded-full bg-[hsl(160_60%_40%)]" />
+            <span className="text-[13px] font-medium text-[hsl(220_10%_45%)]">
+              Location auto-tagged near <strong className="text-[hsl(220_30%_10%)] font-semibold">{locationName?.split(',')[0] || 'Detecting...'}</strong>
             </span>
           </div>
 
           {/* Submit */}
           <button onClick={handleSubmit} disabled={submitting || !issueType || !title || !description}
-            className={`font-sora w-full h-[52px] rounded-[12px] text-[15px] font-[800] shadow-md transition-all flex items-center justify-center gap-2 ${
-              submitting ? 'bg-warm-orange/60 text-white cursor-not-allowed' : 'bg-warm-orange hover:bg-warm-orange-hover text-white hover:shadow-lg'
+            className={`w-full h-[44px] rounded-md text-[14px] font-medium transition-colors flex items-center justify-center gap-2 ${
+              submitting ? 'bg-[hsl(24_90%_52%)]/60 text-white cursor-not-allowed' : 'bg-[hsl(24_90%_52%)] hover:bg-[hsl(24_90%_45%)] text-white shadow-sm'
             }`}>
             {submitting ? (
               <>

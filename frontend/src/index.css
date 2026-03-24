@@ -1,116 +1,122 @@
-@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 @import "tailwindcss";
 @import "leaflet/dist/leaflet.css";
 
 @theme {
-  --font-sora: "Sora", "sans-serif";
-  --font-dm: "DM Sans", "sans-serif";
+  --font-inter: "Inter", "sans-serif";
 
-  --color-teal-dark: #0F3D3E;
-  --color-teal: #145A5C;
-  --color-teal-mid: #1F7A7A;
-  --color-teal-light: #E8F3F3;
-  --color-warm-orange: #F4A261;
-  --color-warm-orange-hover: #E8924F;
-  --color-page-bg: #F5F1EA;
-  --color-charcoal: #1E293B;
-  --color-green: #22A06B;
-  --color-red: #E63946;
-  --color-blue: #3B82F6;
-  --color-slate: #64748B;
-  --color-card: #FFFFFF;
-
-  /* Legacy aliases for backward compat */
-  --color-saffron: #F4A261;
-  --color-india-green: #22A06B;
-  --color-navy: #0F3D3E;
-  --color-background: #F5F1EA;
-  --color-accent-gold: #F4A261;
-
-  --color-status-submitted-bg: #EFF6FF;
-  --color-status-submitted-text: #3B82F6;
-  --color-status-in-progress-bg: #FFF7ED;
-  --color-status-in-progress-text: #F4A261;
-  --color-status-resolved-bg: #F0FDF4;
-  --color-status-resolved-text: #22A06B;
-
-  --shadow-card: 0 2px 8px rgba(0,0,0,0.04);
+  --color-background: hsl(210 20% 98%);
+  --color-foreground: hsl(220 30% 10%);
+  
+  --color-card: hsl(0 0% 100%);
+  --color-card-foreground: hsl(220 30% 10%);
+  
+  --color-popover: hsl(0 0% 100%);
+  --color-popover-foreground: hsl(220 30% 10%);
+  
+  /* Primary: Navy Blue #0f3460 equivalent to 220 60% 25% */
+  --color-primary: hsl(220 60% 25%);
+  --color-primary-foreground: hsl(0 0% 98%);
+  
+  --color-secondary: hsl(210 15% 93%);
+  --color-secondary-foreground: hsl(220 30% 15%);
+  
+  --color-muted: hsl(210 15% 95%);
+  --color-muted-foreground: hsl(220 10% 45%);
+  
+  /* Accent: Orange #f97316 equivalent to 24 90% 52% */
+  --color-accent: hsl(24 90% 52%);
+  --color-accent-foreground: hsl(0 0% 100%);
+  
+  --color-destructive: hsl(0 84% 60%);
+  --color-destructive-foreground: hsl(0 0% 98%);
+  
+  --color-border: hsl(220 13% 90%);
+  --color-input: hsl(220 13% 90%);
+  --color-ring: hsl(220 60% 25%);
+  
+  --radius-xl: 1rem;
+  --radius-lg: 0.75rem;
+  --radius-md: 0.5rem;
+  --radius-sm: 0.25rem;
 }
 
 @layer base {
   body {
-    background-color: var(--color-page-bg);
-    color: var(--color-charcoal);
-    font-family: var(--font-dm);
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-inter);
     -webkit-font-smoothing: antialiased;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-sora);
-    color: var(--color-charcoal);
-    font-weight: 800;
+    font-family: var(--font-inter);
+    color: var(--color-foreground);
+    font-weight: 700;
+    letter-spacing: -0.025em;
   }
 }
 
 @layer components {
-  .font-sora { font-family: var(--font-sora); }
-  .font-dm { font-family: var(--font-dm); }
+  .font-inter { font-family: var(--font-inter); }
 
   .card {
     background-color: var(--color-card);
-    border-radius: 16px;
-    box-shadow: var(--shadow-card);
-    border: 1px solid #e5e7eb;
+    color: var(--color-card-foreground);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border);
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   }
 
   .btn-primary {
-    background-color: var(--color-warm-orange);
-    color: white;
-    border-radius: 12px;
-    padding: 0.875rem 1.25rem;
-    font-family: var(--font-sora);
-    font-weight: 800;
-    font-size: 14px;
-    transition: all 0.2s;
-    box-shadow: 0 4px 12px rgba(244, 162, 97, 0.3);
+    background-color: var(--color-primary);
+    color: var(--color-primary-foreground);
+    border-radius: var(--radius-md);
+    padding: 0.5rem 1rem;
+    font-family: var(--font-inter);
+    font-weight: 500;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    transition: background-color 0.2s;
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   }
   .btn-primary:hover {
-    background-color: var(--color-warm-orange-hover);
-    box-shadow: 0 6px 16px rgba(244, 162, 97, 0.4);
+    background-color: hsl(220 60% 20%);
   }
 
-  .btn-teal {
-    background-color: var(--color-teal);
-    color: white;
-    border-radius: 12px;
-    padding: 0.75rem 1.25rem;
-    font-family: var(--font-sora);
-    font-weight: 800;
-    font-size: 14px;
-    transition: all 0.2s;
-    box-shadow: 0 4px 12px rgba(15, 61, 62, 0.2);
+  .btn-accent {
+    background-color: var(--color-accent);
+    color: var(--color-accent-foreground);
+    border-radius: var(--radius-md);
+    padding: 0.625rem 1.25rem;
+    font-family: var(--font-inter);
+    font-weight: 600;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    transition: background-color 0.2s;
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
   }
-  .btn-teal:hover {
-    background-color: #0c3132;
+  .btn-accent:hover {
+    background-color: hsl(24 90% 45%);
   }
 
   .input-field {
-    font-family: var(--font-sora);
+    font-family: var(--font-inter);
     width: 100%;
-    height: 48px;
-    padding: 0 16px;
-    border-radius: 12px;
-    background: #F8FAFC;
-    border: 1px solid #e5e7eb;
-    color: var(--color-charcoal);
-    font-size: 14px;
+    height: 2.5rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--radius-md);
+    background: transparent;
+    border: 1px solid var(--color-input);
+    color: var(--color-foreground);
+    font-size: 0.875rem;
     outline: none;
     transition: all 0.2s;
   }
-  .input-field::placeholder { color: #9ca3af; }
+  .input-field::placeholder { color: var(--color-muted-foreground); }
   .input-field:focus {
-    border-color: var(--color-teal-mid);
-    background: white;
+    border-color: var(--color-ring);
+    box-shadow: 0 0 0 1px var(--color-ring);
   }
 
   .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -125,10 +131,10 @@
 
   /* Modal slide up */
   @keyframes modal-up {
-    from { transform: translateY(40px); opacity: 0; }
+    from { transform: translateY(20px); opacity: 0; }
     to { transform: translateY(0); opacity: 1; }
   }
-  .modal-slide-up { animation: modal-up 0.3s ease-out forwards; }
+  .modal-slide-up { animation: modal-up 0.2s ease-out forwards; }
 
   /* Drawer slide */
   @keyframes drawer-in {
